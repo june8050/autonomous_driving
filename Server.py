@@ -14,6 +14,7 @@ from Time import Time
 
 httpd = None
 DISPLAY = 'DISPLAY' in environ
+DISPLAY=True
 
 def select_white(image, white):
     lower = np.uint8([white,white,white])
