@@ -102,16 +102,15 @@ def main():
         print(Time(), data)
         action = data['action']
         print('action', action)
-        try:
-            direction = MOTOR_SPEEDS[action]
-            a=direction[0]
-            b=direction[1]
-            c=direction[2]
-            d=direction[3]
-            p1A.ChangeDutyCycle(a)
-            p1B.ChangeDutyCycle(b)
-            p2A.ChangeDutyCycle(c)
-            p2B.ChangeDutyCycle(d)
+        direction = MOTOR_SPEEDS[action]
+        a=direction[0]
+        b=direction[1]
+        c=direction[2]
+        d=direction[3]
+        p1A.ChangeDutyCycle(a)
+        p1B.ChangeDutyCycle(b)
+        p2A.ChangeDutyCycle(c)
+        p2B.ChangeDutyCycle(d)
         
 
 main()
