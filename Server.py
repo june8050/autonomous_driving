@@ -117,6 +117,19 @@ class Handler(BaseHTTPRequestHandler):
             cv2.line(masked_image,(x1,y1),(x2,y2),(255),2)
             cv2.imshow("Processed", masked_image)
             print(result)
+            if result[0] == 'forward':
+                key="w"
+            elif result[0]=='left':
+                key="q"
+            elif result[0]=='right':
+                key="e"
+            else:
+                key="x"
+                
+            data = {"action": key}
+            print(Time(), 'Sending', data)
+            self.wfile.write(bytes(json.dumps(data), encoding='utf8'))
+            self.wfile.write(b'\n')
             #cv2.imshow('image', img)
             cv2.waitKey(1)
 
@@ -125,8 +138,7 @@ class Handler(BaseHTTPRequestHandler):
                 File.write(data)
                 print('Written to file')
 
-        self.wfile.write(
-                bytes(json.dumps({"foo": "bar"}), encoding='utf8'))
+        #self.wfile.write(bytes(json.dumps({"foo": "bar"}), encoding='utf8'))
 
 
 
