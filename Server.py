@@ -116,6 +116,7 @@ class Handler(BaseHTTPRequestHandler):
             y2 = y1-result[2] 
             cv2.line(masked_image,(x1,y1),(x2,y2),(255),2)
             cv2.imshow("Processed", masked_image)
+            print(result)
             #cv2.imshow('image', img)
             cv2.waitKey(1)
 
