@@ -126,9 +126,9 @@ class Handler(BaseHTTPRequestHandler):
             else:
                 key="x"
                 
-            data = {"action": key}
+            #data = {"action": key}
             print(Time(), 'Sending', data)
-            self.wfile.write(bytes(json.dumps(data), encoding='utf8'))
+            self.wfile.write(bytes(json.dumps(key), encoding='utf8'))
             self.wfile.write(b'\n')
             #cv2.imshow('image', img)
             cv2.waitKey(1)
