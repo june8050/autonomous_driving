@@ -10,7 +10,7 @@ from os import environ
 import numpy as np
 import cv2
 
-from Time import Time
+from time import time
 
 httpd = None
 DISPLAY = 'DISPLAY' in environ
@@ -86,7 +86,7 @@ class Handler(BaseHTTPRequestHandler):
                 break
 
             data = {"action": key}
-            print(Time(), 'Sending', data)
+            print(time(), 'Sending', data)
             self.wfile.write(
                 bytes(json.dumps(data), encoding='utf8'))
             self.wfile.write(b'\n')
@@ -127,7 +127,7 @@ class Handler(BaseHTTPRequestHandler):
                 key="x"
                 
             #data = {"action": key}
-            print(Time(), 'Sending', data)
+            print(time(), 'Sending', data)
             self.wfile.write(bytes(json.dumps(key), encoding='utf8'))
             self.wfile.write(b'\n')
             #cv2.imshow('image', img)
