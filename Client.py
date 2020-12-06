@@ -9,6 +9,7 @@ import numpy as np
 from time import sleep
 import json
 from http.client import HTTPConnection
+import RPi.GPIO as GPIO
 PORT = 8000
 file = 'steveholt.jpg'
 host = 'localhost'
