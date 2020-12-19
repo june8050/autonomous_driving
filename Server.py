@@ -54,8 +54,14 @@ def marker(img):
         print('detected',marker.id)
         marker.highlite_marker(img)
         
-    if marker.id == :
-        
+    if marker.id == 144:
+        result = 'a'
+    elif marker.id == 922:
+        reslut = 'd'
+    elif marker.id == 2537:
+        result = 's'
+    
+    return result
         
     
         
@@ -95,15 +101,19 @@ def set_path3(image, forward_criteria):
         center_x = np.vstack((np.arange(forward), np.zeros(forward)))
         m, c = np.linalg.lstsq(center_x.T, center_y, rcond=-1)[0]
         if forward < 20 or forward < 50 and abs(m) < 0.35:
-            result = 'backward'
+            result = 'x'
         elif abs(m) < forward_criteria:
-            result = 'forward'
-        elif m > 0:
-            result = 'left'
+            result = 'w' 
+        elif 2 > m > forward_criteria:
+            result = 'q' 
+        elif m > 2:
+            result = 'a'
+        elif 0-forward_criteria > m > -2:
+            reslut = 'e'
         else:
-            result = 'right'
+            result = 'd'
     except:
-        result = 'backward'
+        result = 'x'
         m = 0
     
     return result, round(m,4), forward
@@ -155,16 +165,17 @@ class Handler(BaseHTTPRequestHandler):
             cv2.line(masked_image,(x1,y1),(x2,y2),(255),2)
             cv2.imshow("Processed", masked_image)
             
+            key = result
             
             print(result)
-            if result[0] == 'forward':
+            '''if result[0] == 'forward':
                 key="w"
             elif result[0]=='left':
                 key="q"
             elif result[0]=='right':
                 key="e"
             else:
-                key="x"
+                key="x"'''
                 
             #data = {"action": key}
             print(time(), 'Sending', data)
