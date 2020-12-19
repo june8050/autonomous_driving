@@ -6,6 +6,7 @@ import json
 from readchar import readkey
 from sys import argv
 from os import environ
+from ar_markers import detect_markers
 
 import numpy as np
 import cv2
@@ -16,12 +17,48 @@ httpd = None
 DISPLAY = 'DISPLAY' in environ
 DISPLAY=True
 
+map1 = np.load('./map1.npy')
+map2 = np.load('./map2.npy')
+
+objs_cascade = cv2.CascadeClassifier('./cascade.xml')
+
 def select_white(image, white):
     lower = np.uint8([white,white,white])
     upper = np.uint8([255,255,255])
     white_mask = cv2.inRange(image, lower, upper)
     return white_mask
 
+def undistort(img):
+    
+    h,w = img.shape[:2]
+    
+    undistorted_img=cv2.remap(img, map1, map2, interpolation=cv2.INTER_LINEAR, borderMode=cv2.BORDER_CONSTANT)
+    
+    return undistorted_img
+
+def cascade(img):
+    objs = objs_cascade.detectMultiScale(img, 1.3, 5)
+    
+    for (x,y,w,h) in objs:
+        cv2.rectangle(img, (x,y), (x+w,y+h),(255,0,0),2)
+    
+    #if (x+w)*(y+h) > 100:
+        #stop
+    #else:
+        
+        
+
+def marker(img):
+    markers = detect_markers(img)
+    for marker in markers:
+        print('detected',marker.id)
+        marker.highlite_marker(img)
+        
+    if marker.id == :
+        
+        
+    
+        
 def first_nonzero(arr, axis, invalid_val=-1):
     arr = np.flipud(arr)
     mask = arr!=0
@@ -33,9 +70,7 @@ def set_path3(image, forward_criteria):
     width = width-1
     center=int(width/2)
     left=0
-    right=width
-    
-    center = int((left+right)/2)        
+    right=width        
     
     try:
         '''if image[height][:center].min(axis=0) == 255:
@@ -106,7 +141,10 @@ class Handler(BaseHTTPRequestHandler):
         if DISPLAY:
             data = np.asarray(bytearray(data), dtype="uint8")
             img = cv2.imdecode(data, cv2.IMREAD_ANYCOLOR)
-            #Marker
+            undistort(img)
+            cascade(img)
+            marker(img)
+            
             masked_image = select_white(img, 160)
             result=set_path3(masked_image,0.25)
             #result=set_path1(masked_image,120)
@@ -116,6 +154,8 @@ class Handler(BaseHTTPRequestHandler):
             y2 = y1-result[2] 
             cv2.line(masked_image,(x1,y1),(x2,y2),(255),2)
             cv2.imshow("Processed", masked_image)
+            
+            
             print(result)
             if result[0] == 'forward':
                 key="w"
