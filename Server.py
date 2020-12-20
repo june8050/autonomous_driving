@@ -184,7 +184,15 @@ def set_path3(image, forward_criteria):
     except:
         key = 'x'
         m = 0
-    
+        
+    a1 = round(m,4)
+    a2 = forward
+    y1, x1 = img.shape
+    x1 = int(x1/2)
+    x2 = int(-a2 * a1 + x1)
+    y2 = y1-a2 
+    cv2.line(img,(x1,y1),(x2,y2),(255),2)
+
     return key#, round(m,4), forward
 
 def decision_make(img):
@@ -238,11 +246,11 @@ class Handler(BaseHTTPRequestHandler):
             
             decision_make(img)
 
-            y1, x1 = img.shape
+            '''y1, x1 = img.shape
             x1 = int(x1/2)
             x2 = int(-result[2] * result[1] + x1)
             y2 = y1-result[2] 
-            cv2.line(img,(x1,y1),(x2,y2),(255),2)
+            cv2.line(img,(x1,y1),(x2,y2),(255),2)'''
             cv2.imshow("Processed", img)
             
             
