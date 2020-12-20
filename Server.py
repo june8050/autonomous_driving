@@ -187,9 +187,9 @@ def set_path3(image, forward_criteria):
 
 def decision_make(img):
         img=undistort(img)
-	
+
         key = cascade(img)
-	
+
         if key == 'blank':
             key = marker(img)
             if key == 'blank':
