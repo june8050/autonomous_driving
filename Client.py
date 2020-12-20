@@ -116,7 +116,7 @@ def UploadCamera(camera, rawCapture):
         
         if distance > 10:
             pass
-        elif distance < 10 and data = 'q' or 'a':
+        elif distance < 10 and data == 'q' or 'a':
             pass
         else:
             data = 's'
