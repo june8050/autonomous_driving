@@ -44,19 +44,15 @@ def cascade(img):
         cv2.rectangle(img, (x,y), (x+w,y+h),(255,0,0),2)
     
     if (x+w)*(y+h) > 100: #사각형이 어느정도 크기 이상이면
-		key = 's'
+	key = 's'
         self.wfile.write(bytes(json.dumps(key), encoding='utf8'))
         self.wfile.write(b'\n')
-		'''cv2.waitKey(1)'''
-		time.sleep(5)
-		key = 'w'
-        self.wfile.write(bytes(json.dumps(key), encoding='utf8'))
-        self.wfile.write(b'\n')
-		'''cv2.waitKey(1)'''
+	'''cv2.waitKey(1)'''
+	time.sleep(5)
+	key = 'w'
     else:
-        result = 'blank'
-		
-		return result
+        key = 'blank'	
+	return key
 
 def marker(img):
     markers = detect_markers(img)
@@ -65,21 +61,62 @@ def marker(img):
         marker.highlite_marker(img)
         
     if marker.id == 144:
-        result = 'a'
+        key = 'a'
     elif marker.id == 922:
-        reslut = 'd'
+        key = 'd'
     elif marker.id == 2537:
-        result = 's'
-	else:
-		result = 'blank'
-    
-    return result
-        
+        key = 's'
+    else:
+	key = 'blank'
+	
+    return key
         
 def first_nonzero(arr, axis, invalid_val=-1):
     arr = np.flipud(arr)
     mask = arr!=0
     return np.where(mask.any(axis=axis), mask.argmax(axis=axis), invalid_val)
+
+def set_path1(image, upper_limit, fixed_center = 'False', sample=10):
+    height, width = image.shape
+    height = height-1
+    width = width-1
+    center=int(width/2)
+    left=0
+    right=width
+    white_distance = np.zeros(width)
+       
+    if not fixed_center: 
+        for i in range(center):
+            if image[height,center-i] > 200:
+                left = center-i
+                break            
+        for i in range(center):
+            if image[height,center+i] > 200:
+                right = center+i
+                break    
+        center = int((left+right)/2)      
+
+    for i in range(left,right,sample):
+        for j in range(upper_limit):
+            if image[height-j,i] > 200:                
+                white_distance[i]=j
+                break
+    
+    left_sum = np.sum(white_distance[left:center])
+    right_sum = np.sum(white_distance[center:right])
+    
+    sum = left_sum + right_sum
+    
+    if sum < 2000:
+	key = 'a'
+	self.wfile.write(bytes(json.dumps(key), encoding='utf8'))
+        self.wfile.write(b'\n')
+	'''cv2.waitKey(1)'''
+	time.sleep(5) #유턴하는 시간
+	
+	key = 'w'
+    
+    return key
 
 def set_path3(image, forward_criteria):
     height, width = image.shape
@@ -112,35 +149,37 @@ def set_path3(image, forward_criteria):
         center_x = np.vstack((np.arange(forward), np.zeros(forward)))
         m, c = np.linalg.lstsq(center_x.T, center_y, rcond=-1)[0]
         if forward < 20 or forward < 50 and abs(m) < 0.35:
-            result = 'x'
+            key = 'blank'
         elif abs(m) < forward_criteria:
-            result = 'w' 
+            key = 'w' 
         elif 2 > m > forward_criteria:
-            result = 'q' 
+            key = 'q' 
         elif m > 2:
-            result = 'a'
+            key = 'a'
         elif 0-forward_criteria > m > -2:
-            reslut = 'e'
+            key = 'e'
         else:
-            result = 'd'
+            key = 'd'
     except:
-        result = 'x'
+        key = 'x'
         m = 0
     
-    return result, round(m,4), forward
+    return key#, round(m,4), forward
 
 def decision_make(img):
 	img=undistort(img)
 	
-	result = cascade(img)
+	key = cascade(img)
 	
-	if result == 'blank':
-		result = marker(img)
-		if result == 'blank':
+	if key == 'blank':
+		key = marker(img)
+		if key == 'blank':
 			img = select_white(img, 160)
-            result=set_path3(img,0.25)
+            		key=set_path3(img,0.25)
+			if key == 'blank':
+				key = set_path1(img, 160)
 			
-	return result		
+	return key, img		
 
 class Handler(BaseHTTPRequestHandler):
     def do_GET(self):
@@ -185,9 +224,8 @@ class Handler(BaseHTTPRequestHandler):
             cv2.line(img,(x1,y1),(x2,y2),(255),2)
             cv2.imshow("Processed", img)
             
-            key = result
             
-            print(result)
+            print(key)
             '''if result[0] == 'forward':
                 key="w"
             elif result[0]=='left':
