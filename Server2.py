@@ -209,14 +209,14 @@ class Handler(BaseHTTPRequestHandler):
             elif id == 2537:
                 key = 's'
             else:
-                gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+                gray_image = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
                 cascade_obj = objs_cascade.detectMultiScale(gray_image, scaleFactor=1.02, minNeighbors=5, minSize=(16,16))
               
                 for (x_pos, y_pos, width, height) in cascade_obj:
             
                     if(width>=40):
-                        cv2.rectangle(image, (x_pos, y_pos), (x_pos+width, y_pos+height), (255, 255, 255), 2)
-                        cv2.putText(image, 'Stop', (x_pos, y_pos-10), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
+                        cv2.rectangle(img, (x_pos, y_pos), (x_pos+width, y_pos+height), (255, 255, 255), 2)
+                        cv2.putText(img, 'Stop', (x_pos, y_pos-10), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
                         key="s"
                         self.wfile.write(bytes(json.dumps(key), encoding='utf8'))
                         self.wfile.write(b'\n')
