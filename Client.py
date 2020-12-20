@@ -83,6 +83,8 @@ def UploadCamera(camera, rawCapture):
         print(time(), data)
         #action = data['action']
         #print('action', action)
+                          
+        #초음파
 
         direction = MOTOR_SPEEDS[data]
 
