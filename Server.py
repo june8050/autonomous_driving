@@ -194,11 +194,11 @@ def decision_make(img):
             key = marker(img)
             if key == 'blank':
                 img = select_white(img, 160)
-            	key=set_path3(img,0.25)
+                key=set_path3(img,0.25)
                 if key == 'blank':
                     key = set_path1(img, 160)
-			
-        return key, img		
+
+        return key, img
 
 class Handler(BaseHTTPRequestHandler):
     def do_GET(self):
