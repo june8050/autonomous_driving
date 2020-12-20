@@ -29,6 +29,12 @@ GPIO.setup(motor1B, GPIO.OUT)
 GPIO.setup(motor2A, GPIO.OUT)
 GPIO.setup(motor2B, GPIO.OUT)
 
+GPIO_TRIGGER = 10
+GPIO_ECHO    = 12
+GPIO.setup(GPIO_TRIGGER,GPIO.OUT)
+GPIO.setup(GPIO_ECHO,GPIO.IN)
+GPIO.output(GPIO_TRIGGER, False)
+
 # PWM
 p1A = GPIO.PWM(motor1A, 1000)
 p1B = GPIO.PWM(motor1B, 1000)
@@ -67,7 +73,28 @@ def Camera():
 
     return camera
 
+def measure():
+    GPIO.output(GPIO_TRIGGER, True)
+    time.sleep(0.00001)
+    GPIO.output(GPIO_TRIGGER, False)
+    start = time.time()
+    timeOut = start
 
+    while GPIO.input(GPIO_ECHO)==0:
+        start = time.time()
+        if time.time()-timeOut > 0.05:
+            return -1
+
+    while GPIO.input(GPIO_ECHO)==1:
+        if time.time()-start > 0.05:
+            return -1
+        stop = time.time()
+
+    elapsed = stop-start
+    distance = (elapsed * 34300)/2
+
+    return distance
+                          
 def UploadCamera(camera, rawCapture):
     for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
         img = frame.array
@@ -85,6 +112,14 @@ def UploadCamera(camera, rawCapture):
         #print('action', action)
                           
         #초음파
+        measure()
+        
+        if distance > 10:
+            pass
+        elif distance < 10 and data = 'q' or 'a':
+            pass
+        else:
+            data = 's'
 
         direction = MOTOR_SPEEDS[data]
 
