@@ -52,7 +52,7 @@ def cascade(img):
 	key = 'w'
     else:
         key = 'blank'	
-	return key
+        return key
 
 def marker(img):
     markers = detect_markers(img)
@@ -62,31 +62,31 @@ def marker(img):
         
     if marker.id == 144:
         key = 'a'
-	self.wfile.write(bytes(json.dumps(key), encoding='utf8'))
+        self.wfile.write(bytes(json.dumps(key), encoding='utf8'))
         self.wfile.write(b'\n')
-	'''cv2.waitKey(1)'''
-	time.sleep(3)#회전시간
-	key = 'w'
-	self.wfile.write(bytes(json.dumps(key), encoding='utf8'))
+        '''cv2.waitKey(1)'''
+        time.sleep(3)#회전시간
+        key = 'w'
+        self.wfile.write(bytes(json.dumps(key), encoding='utf8'))
         self.wfile.write(b'\n')
-	'''cv2.waitKey(1)'''
-	time.sleep(2)#전진시간
+        '''cv2.waitKey(1)'''
+        time.sleep(2)#전진시간
     elif marker.id == 922:
         key = 'd'
-	self.wfile.write(bytes(json.dumps(key), encoding='utf8'))
+        self.wfile.write(bytes(json.dumps(key), encoding='utf8'))
         self.wfile.write(b'\n')
-	'''cv2.waitKey(1)'''
-	time.sleep(3)#회전시간
-	key = 'w'
-	self.wfile.write(bytes(json.dumps(key), encoding='utf8'))
+        '''cv2.waitKey(1)'''
+        time.sleep(3)#회전시간
+        key = 'w'
+        self.wfile.write(bytes(json.dumps(key), encoding='utf8'))
         self.wfile.write(b'\n')
-	'''cv2.waitKey(1)'''
-	time.sleep(2)#전진시간
+        '''cv2.waitKey(1)'''
+        time.sleep(2)#전진시간
     elif marker.id == 2537:
         key = 's'
     else:
-	key = 'blank'
-	
+        key = 'blank'
+
     return key
         
 def first_nonzero(arr, axis, invalid_val=-1):
@@ -102,7 +102,7 @@ def set_path1(image, upper_limit, fixed_center = 'False', sample=10):
     left=0
     right=width
     white_distance = np.zeros(width)
-       
+
     if not fixed_center: 
         for i in range(center):
             if image[height,center-i] > 200:
@@ -126,13 +126,13 @@ def set_path1(image, upper_limit, fixed_center = 'False', sample=10):
     sum = left_sum + right_sum
     
     if sum < 2000:
-	key = 'a'
-	self.wfile.write(bytes(json.dumps(key), encoding='utf8'))
+        key = 'a'
+        self.wfile.write(bytes(json.dumps(key), encoding='utf8'))
         self.wfile.write(b'\n')
-	'''cv2.waitKey(1)'''
-	time.sleep(5) #유턴하는 시간
+        '''cv2.waitKey(1)'''
+        time.sleep(5) #유턴하는 시간
 	
-	key = 'w'
+        key = 'w'
     
     return key
 
@@ -185,19 +185,19 @@ def set_path3(image, forward_criteria):
     return key#, round(m,4), forward
 
 def decision_make(img):
-	img=undistort(img)
+        img=undistort(img)
 	
-	key = cascade(img)
+        key = cascade(img)
 	
-	if key == 'blank':
-		key = marker(img)
-		if key == 'blank':
-			img = select_white(img, 160)
-            		key=set_path3(img,0.25)
-			if key == 'blank':
-				key = set_path1(img, 160)
+        if key == 'blank':
+            key = marker(img)
+            if key == 'blank':
+                img = select_white(img, 160)
+            	key=set_path3(img,0.25)
+                if key == 'blank':
+                    key = set_path1(img, 160)
 			
-	return key, img		
+        return key, img		
 
 class Handler(BaseHTTPRequestHandler):
     def do_GET(self):
@@ -234,7 +234,7 @@ class Handler(BaseHTTPRequestHandler):
             img = cv2.imdecode(data, cv2.IMREAD_ANYCOLOR)
             
             decision_make(img)
-			
+
             y1, x1 = img.shape
             x1 = int(x1/2)
             x2 = int(-result[2] * result[1] + x1)
