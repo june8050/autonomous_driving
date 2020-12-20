@@ -37,7 +37,7 @@ def undistort(img):
     
     return undistorted_img
 
-def cascade(img):
+'''def cascade(img):
     objs = objs_cascade.detectMultiScale(img, 1.3, 5)
     
     for (x,y,w,h) in objs:
@@ -53,7 +53,40 @@ def cascade(img):
     else:
         key = 'blank'	
     
-    return key
+    return key'''
+
+def detect(cascade_classifier, image):
+        gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+        
+        key="blank"
+        
+        # scale Factor : 1 초과의 값, 1에 가까울 수록 연산량이 많아짐
+        # minNeighbors : 0에 가까울수록 더 많은 물체를 잡음 (더 많이 틀림)
+        # minSize : 최소 크기 - 너무 먼 물체를 잡는 문제를 해결하기 위함
+        cascade_obj = cascade_classifier.detectMultiScale(
+            gray_image,
+            scaleFactor=1.02,
+            minNeighbors=5,
+            minSize=(16,16),           
+        )
+        
+        # 잡힌 물체들 목록이  cascade_obj'
+        # 이 예제에서는 굳이 40, 40 이상을 따로 구분해서 표시함
+        # 16~40 사이의 물체는 인식은 되는데 그려주지는 않음. 단지 width height를 확인하는 용도
+        # 크기를 체크하면서 최적 값을 찾는 흔적으로 보임.
+        for (x_pos, y_pos, width, height) in cascade_obj:
+            # draw a rectangle around the objects
+            #print(width,height)
+            if(width>=40):
+                cv2.rectangle(image, (x_pos, y_pos), (x_pos+width, y_pos+height), (255, 255, 255), 2)
+                cv2.putText(image, 'Stop', (x_pos, y_pos-10), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
+                key="s"
+                self.wfile.write(bytes(json.dumps(key), encoding='utf8'))
+                self.wfile.write(b'\n')
+                '''cv2.waitKey(1)'''
+                time.sleep(6)
+                key ='w'
+        return key
 
 def marker(img):
     id = 0
@@ -198,7 +231,7 @@ def set_path3(image, forward_criteria):
 def decision_make(img):
         img=undistort(img)
 
-        key = cascade(img)
+        key = detect(objs_cascade,img)
 
         if key == 'blank':
             key = marker(img)
@@ -208,7 +241,7 @@ def decision_make(img):
                 if key == 'blank':
                     key = set_path1(img, 160)
 
-        return key, img
+        return key#, img
 
 class Handler(BaseHTTPRequestHandler):
     def do_GET(self):
