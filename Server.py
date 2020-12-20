@@ -52,7 +52,8 @@ def cascade(img):
 	key = 'w'
     else:
         key = 'blank'	
-        return key
+    
+    return key
 
 def marker(img):
     markers = detect_markers(img)
