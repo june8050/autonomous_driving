@@ -6,7 +6,7 @@ import json
 from readchar import readkey
 from sys import argv
 from os import environ
-from ar_markers import detect_marker
+from ar_markers import detect_markers
 import time
 
 import numpy as np
