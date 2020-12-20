@@ -62,8 +62,26 @@ def marker(img):
         
     if marker.id == 144:
         key = 'a'
+	self.wfile.write(bytes(json.dumps(key), encoding='utf8'))
+        self.wfile.write(b'\n')
+	'''cv2.waitKey(1)'''
+	time.sleep(3)#회전시간
+	key = 'w'
+	self.wfile.write(bytes(json.dumps(key), encoding='utf8'))
+        self.wfile.write(b'\n')
+	'''cv2.waitKey(1)'''
+	time.sleep(2)#전진시간
     elif marker.id == 922:
         key = 'd'
+	self.wfile.write(bytes(json.dumps(key), encoding='utf8'))
+        self.wfile.write(b'\n')
+	'''cv2.waitKey(1)'''
+	time.sleep(3)#회전시간
+	key = 'w'
+	self.wfile.write(bytes(json.dumps(key), encoding='utf8'))
+        self.wfile.write(b'\n')
+	'''cv2.waitKey(1)'''
+	time.sleep(2)#전진시간
     elif marker.id == 2537:
         key = 's'
     else:
