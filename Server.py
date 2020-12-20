@@ -44,7 +44,7 @@ def cascade(img):
         cv2.rectangle(img, (x,y), (x+w,y+h),(255,0,0),2)
     
     if (x+w)*(y+h) > 100: #사각형이 어느정도 크기 이상이면
-	key = 's'
+        key = 's'
 	self.wfile.write(bytes(json.dumps(key), encoding='utf8'))
 	self.wfile.write(b'\n')
 	'''cv2.waitKey(1)'''
