@@ -56,12 +56,14 @@ def cascade(img):
     return key
 
 def marker(img):
+    id = 0
     markers = detect_markers(img)
     for marker in markers:
+        id=marker.id
         print('detected',marker.id)
         marker.highlite_marker(img)
         
-    if markers.id == 144:
+    if id == 144:
         key = 'a'
         self.wfile.write(bytes(json.dumps(key), encoding='utf8'))
         self.wfile.write(b'\n')
@@ -72,7 +74,7 @@ def marker(img):
         self.wfile.write(b'\n')
         '''cv2.waitKey(1)'''
         time.sleep(2)#전진시간
-    elif markers.id == 922:
+    elif id == 922:
         key = 'd'
         self.wfile.write(bytes(json.dumps(key), encoding='utf8'))
         self.wfile.write(b'\n')
@@ -83,11 +85,11 @@ def marker(img):
         self.wfile.write(b'\n')
         '''cv2.waitKey(1)'''
         time.sleep(2)#전진시간
-    elif markers.id == 2537:
+    elif id == 2537:
         key = 's'
     else:
         key = 'blank'
-
+    id=0
     return key
         
 def first_nonzero(arr, axis, invalid_val=-1):
