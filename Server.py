@@ -6,7 +6,8 @@ import json
 from readchar import readkey
 from sys import argv
 from os import environ
-from ar_markers import detect_markers
+from ar_markers import detect_marker
+import time
 
 import numpy as np
 import cv2
@@ -42,11 +43,20 @@ def cascade(img):
     for (x,y,w,h) in objs:
         cv2.rectangle(img, (x,y), (x+w,y+h),(255,0,0),2)
     
-    #if (x+w)*(y+h) > 100:
-        #stop
-    #else:
-        
-        
+    if (x+w)*(y+h) > 100: #사각형이 어느정도 크기 이상이면
+		key = 's'
+        self.wfile.write(bytes(json.dumps(key), encoding='utf8'))
+        self.wfile.write(b'\n')
+		'''cv2.waitKey(1)'''
+		time.sleep(5)
+		key = 'w'
+        self.wfile.write(bytes(json.dumps(key), encoding='utf8'))
+        self.wfile.write(b'\n')
+		'''cv2.waitKey(1)'''
+    else:
+        result = 'blank'
+		
+		return result
 
 def marker(img):
     markers = detect_markers(img)
@@ -60,10 +70,11 @@ def marker(img):
         reslut = 'd'
     elif marker.id == 2537:
         result = 's'
+	else:
+		result = 'blank'
     
     return result
         
-    
         
 def first_nonzero(arr, axis, invalid_val=-1):
     arr = np.flipud(arr)
@@ -118,6 +129,19 @@ def set_path3(image, forward_criteria):
     
     return result, round(m,4), forward
 
+def decision_make(img):
+	img=undistort(img)
+	
+	result = cascade(img)
+	
+	if result == 'blank':
+		result = marker(img)
+		if result == 'blank':
+			img = select_white(img, 160)
+            result=set_path3(img,0.25)
+			
+	return result		
+
 class Handler(BaseHTTPRequestHandler):
     def do_GET(self):
         self.send_response(200)
@@ -151,19 +175,15 @@ class Handler(BaseHTTPRequestHandler):
         if DISPLAY:
             data = np.asarray(bytearray(data), dtype="uint8")
             img = cv2.imdecode(data, cv2.IMREAD_ANYCOLOR)
-            undistort(img)
-            cascade(img)
-            marker(img)
             
-            masked_image = select_white(img, 160)
-            result=set_path3(masked_image,0.25)
-            #result=set_path1(masked_image,120)
-            y1, x1 = masked_image.shape
+            decision_make(img)
+			
+            y1, x1 = img.shape
             x1 = int(x1/2)
             x2 = int(-result[2] * result[1] + x1)
             y2 = y1-result[2] 
-            cv2.line(masked_image,(x1,y1),(x2,y2),(255),2)
-            cv2.imshow("Processed", masked_image)
+            cv2.line(img,(x1,y1),(x2,y2),(255),2)
+            cv2.imshow("Processed", img)
             
             key = result
             
