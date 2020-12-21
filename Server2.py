@@ -216,7 +216,7 @@ class Handler(BaseHTTPRequestHandler):
                         cv2.rectangle(img, (x_pos, y_pos), (x_pos+width, y_pos+height), (255, 255, 255), 2)
                         cv2.putText(img, 'Stop', (x_pos, y_pos-10), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
                         result="s"
-                        self.wfile.write(bytes(json.dumps(key), encoding='utf8'))
+                        self.wfile.write(bytes(json.dumps(result), encoding='utf8'))
                         self.wfile.write(b'\n')
                         #cv2.waitKey(1)
                         sleep(6)
