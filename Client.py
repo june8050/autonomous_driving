@@ -75,20 +75,20 @@ def Camera():
 
 def measure():
     GPIO.output(GPIO_TRIGGER, True)
-    time.sleep(0.00001)
+    sleep(0.00001)
     GPIO.output(GPIO_TRIGGER, False)
-    start = time.time()
+    start = time()
     timeOut = start
 
     while GPIO.input(GPIO_ECHO)==0:
-        start = time.time()
-        if time.time()-timeOut > 0.05:
+        start = time()
+        if time()-timeOut > 0.05:
             return -1
 
     while GPIO.input(GPIO_ECHO)==1:
-        if time.time()-start > 0.05:
+        if time()-start > 0.05:
             return -1
-        stop = time.time()
+        stop = time()
 
     elapsed = stop-start
     distance = (elapsed * 34300)/2
@@ -111,8 +111,8 @@ def UploadCamera(camera, rawCapture):
         #action = data['action']
         #print('action', action)
                           
-        #초음파
-        measure()
+       
+        distance = measure()
         
         if distance > 10:
             pass
