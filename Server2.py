@@ -7,12 +7,10 @@ from readchar import readkey
 from sys import argv
 from os import environ
 from ar_markers import detect_markers
-import time
-
+from time import sleep
+from time import time
 import numpy as np
 import cv2
-
-from time import time
 
 httpd = None
 DISPLAY = 'DISPLAY' in environ
@@ -78,7 +76,7 @@ def set_path1(image, upper_limit, fixed_center = 'False', sample=10):
         self.wfile.write(bytes(json.dumps(key), encoding='utf8'))
         self.wfile.write(b'\n')
         '''cv2.waitKey(1)'''
-        time.sleep(5) #유턴하는 시간
+        sleep(5) #유턴하는 시간
 	
         key = 'w'
     
@@ -189,23 +187,23 @@ class Handler(BaseHTTPRequestHandler):
                 self.wfile.write(bytes(json.dumps(key), encoding='utf8'))
                 self.wfile.write(b'\n')
                 #cv2.waitKey(1)
-                time.sleep(3)#회전시간
+                sleep(3)#회전시간
                 key = 'w'
                 self.wfile.write(bytes(json.dumps(key), encoding='utf8'))
                 self.wfile.write(b'\n')
                 #cv2.waitKey(1)
-                time.sleep(2)#전진시간
+                sleep(2)#전진시간
             elif id == 922:
                 key = 'd'
                 self.wfile.write(bytes(json.dumps(key), encoding='utf8'))
                 self.wfile.write(b'\n')
                 #cv2.waitKey(1)
-                time.sleep(3)#회전시간
+                sleep(3)#회전시간
                 key = 'w'
                 self.wfile.write(bytes(json.dumps(key), encoding='utf8'))
                 self.wfile.write(b'\n')
                 #cv2.waitKey(1)
-                time.sleep(2)#전진시간
+                sleep(2)#전진시간
             elif id == 2537:
                 key = 's'
             else:
@@ -221,7 +219,7 @@ class Handler(BaseHTTPRequestHandler):
                         self.wfile.write(bytes(json.dumps(key), encoding='utf8'))
                         self.wfile.write(b'\n')
                         #cv2.waitKey(1)
-                        time.sleep(6)
+                        sleep(6)
                         key ='w'
                     
                     else:
