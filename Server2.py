@@ -72,15 +72,15 @@ def set_path1(image, upper_limit, fixed_center = 'False', sample=10):
     sum = left_sum + right_sum
     
     if sum < 2000:
-        key = 'a'
-        self.wfile.write(bytes(json.dumps(key), encoding='utf8'))
+        result = 'a'
+        self.wfile.write(bytes(json.dumps(result), encoding='utf8'))
         self.wfile.write(b'\n')
         '''cv2.waitKey(1)'''
         sleep(5) #유턴하는 시간
 	
-        key = 'w'
+        result = 'w'
     
-    return key
+    return result
 
 def set_path3(image, forward_criteria):
     height, width = image.shape
@@ -113,19 +113,19 @@ def set_path3(image, forward_criteria):
         center_x = np.vstack((np.arange(forward), np.zeros(forward)))
         m, c = np.linalg.lstsq(center_x.T, center_y, rcond=-1)[0]
         if forward < 20 or forward < 50 and abs(m) < 0.35:
-            key = set_path1(image,160)
+            result = set_path1(image,160)
         elif abs(m) < forward_criteria:
-            key = 'w' 
+            result = 'w' 
         elif 2 > m > forward_criteria:
-            key = 'q' 
+            result = 'q' 
         elif m > 2:
-            key = 'a'
+            result = 'a'
         elif 0-forward_criteria > m > -2:
-            key = 'e'
+            result = 'e'
         else:
-            key = 'd'
+            result = 'd'
     except:
-        key = 'x'
+        result = 'x'
         m = 0
         
     '''a1 = round(m,4)
@@ -136,7 +136,7 @@ def set_path3(image, forward_criteria):
     y2 = y1-a2 
     cv2.line(image,(x1,y1),(x2,y2),(255),2)'''
 
-    return key, round(m,4), forward
+    return result, round(m,4), forward
 
 
 class Handler(BaseHTTPRequestHandler):
@@ -183,29 +183,29 @@ class Handler(BaseHTTPRequestHandler):
                 marker.highlite_marker(img)
         
             if id == 144:
-                key = 'a'
-                self.wfile.write(bytes(json.dumps(key), encoding='utf8'))
+                result = 'a'
+                self.wfile.write(bytes(json.dumps(result), encoding='utf8'))
                 self.wfile.write(b'\n')
                 #cv2.waitKey(1)
                 sleep(3)#회전시간
-                key = 'w'
-                self.wfile.write(bytes(json.dumps(key), encoding='utf8'))
+                result = 'w'
+                self.wfile.write(bytes(json.dumps(result), encoding='utf8'))
                 self.wfile.write(b'\n')
                 #cv2.waitKey(1)
                 sleep(2)#전진시간
             elif id == 922:
-                key = 'd'
-                self.wfile.write(bytes(json.dumps(key), encoding='utf8'))
+                result = 'd'
+                self.wfile.write(bytes(json.dumps(result), encoding='utf8'))
                 self.wfile.write(b'\n')
                 #cv2.waitKey(1)
                 sleep(3)#회전시간
-                key = 'w'
-                self.wfile.write(bytes(json.dumps(key), encoding='utf8'))
+                result = 'w'
+                self.wfile.write(bytes(json.dumps(result), encoding='utf8'))
                 self.wfile.write(b'\n')
                 #cv2.waitKey(1)
                 sleep(2)#전진시간
             elif id == 2537:
-                key = 's'
+                result = 's'
             else:
                 gray_image = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
                 cascade_obj = objs_cascade.detectMultiScale(gray_image, scaleFactor=1.02, minNeighbors=5, minSize=(16,16))
@@ -215,16 +215,16 @@ class Handler(BaseHTTPRequestHandler):
                     if(width>=40):
                         cv2.rectangle(img, (x_pos, y_pos), (x_pos+width, y_pos+height), (255, 255, 255), 2)
                         cv2.putText(img, 'Stop', (x_pos, y_pos-10), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
-                        key="s"
+                        result="s"
                         self.wfile.write(bytes(json.dumps(key), encoding='utf8'))
                         self.wfile.write(b'\n')
                         #cv2.waitKey(1)
                         sleep(6)
-                        key ='w'
+                        result ='w'
                     
                     else:
                         white_img = select_white(img, 160)
-                        key, a1, a2 = set_path3(white_img,0.25)
+                        result, a1, a2 = set_path3(white_img,0.25)
                         y1, x1 = img.shape
                         x1 = int(x1/2)
                         x2 = int(-a2 * a1 + x1)
@@ -233,7 +233,7 @@ class Handler(BaseHTTPRequestHandler):
     
             
             cv2.imshow("Processed", img)
-            
+            key = result
             
             print(key)
                          
