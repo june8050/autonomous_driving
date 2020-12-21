@@ -128,15 +128,15 @@ def set_path3(image, forward_criteria):
         key = 'x'
         m = 0
         
-    a1 = round(m,4)
+    '''a1 = round(m,4)
     a2 = forward
     y1, x1 = image.shape
     x1 = int(x1/2)
     x2 = int(-a2 * a1 + x1)
     y2 = y1-a2 
-    cv2.line(image,(x1,y1),(x2,y2),(255),2)
+    cv2.line(image,(x1,y1),(x2,y2),(255),2)'''
 
-    return key#, round(m,4), forward
+    return key, round(m,4), forward
 
 
 class Handler(BaseHTTPRequestHandler):
@@ -224,7 +224,12 @@ class Handler(BaseHTTPRequestHandler):
                     
                     else:
                         white_img = select_white(img, 160)
-                        key = set_path3(white_img,0.25)
+                        key, a1, a2 = set_path3(white_img,0.25)
+                        y1, x1 = img.shape
+                        x1 = int(x1/2)
+                        x2 = int(-a2 * a1 + x1)
+                        y2 = y1-a2 
+                        cv2.line(img,(x1,y1),(x2,y2),(255),2)
     
             
             cv2.imshow("Processed", img)
